@@ -34,6 +34,7 @@ BOX_ANNOTATOR = sv.BoxAnnotator(color_lookup=sv.ColorLookup.INDEX)
 LABEL_ANNOTATOR = sv.LabelAnnotator(
     color_lookup=sv.ColorLookup.INDEX,
     text_position=sv.Position.CENTER_OF_MASS,
+    text_color=sv.Color.BLACK,
     border_radius=5
 )
 MASK_ANNOTATOR = sv.MaskAnnotator(color_lookup=sv.ColorLookup.INDEX)
