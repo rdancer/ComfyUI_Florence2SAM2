@@ -26,7 +26,7 @@ EXAMPLES = [
     "https://media.roboflow.com/notebooks/examples/dog-4.jpeg"
 ]
 
-DEVICE = torch.device("cpu")
+DEVICE = torch.device("cuda")
 
 FLORENCE_MODEL, FLORENCE_PROCESSOR = load_florence_model(device=DEVICE)
 SAM_MODEL = load_sam_model(device=DEVICE)
