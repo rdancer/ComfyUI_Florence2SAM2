@@ -1,5 +1,5 @@
 ---
-title: Florence Sam
+title: Florence2 + SAM2
 emoji: 🔥
 colorFrom: purple
 colorTo: green

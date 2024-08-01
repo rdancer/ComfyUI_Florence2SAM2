@@ -7,7 +7,7 @@ from PIL import Image
 from transformers import AutoModelForCausalLM, AutoProcessor
 from transformers.dynamic_module_utils import get_imports
 
-FLORENCE_CHECKPOINT = "microsoft/Florence-2-base"
+FLORENCE_CHECKPOINT = "microsoft/Florence-2-large"
 FLORENCE_DETAILED_CAPTION_TASK = '<MORE_DETAILED_CAPTION>'
 FLORENCE_CAPTION_TO_PHRASE_GROUNDING_TASK = '<CAPTION_TO_PHRASE_GROUNDING>'
 
@@ -21,7 +21,7 @@ def fixed_get_imports(filename: Union[str, os.PathLike]) -> list[str]:
     return imports
 
 
-def load_model(
+def load_florence_model(
     device: torch.device, checkpoint: str = FLORENCE_CHECKPOINT
 ) -> Tuple[Any, Any]:
     with patch("transformers.dynamic_module_utils.get_imports", fixed_get_imports):
@@ -32,7 +32,7 @@ def load_model(
         return model, processor
 
 
-def run_inference(
+def run_florence_inference(
     model: Any,
     processor: Any,
     device: torch.device,
