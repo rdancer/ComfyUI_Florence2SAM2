@@ -8,8 +8,11 @@ from transformers import AutoModelForCausalLM, AutoProcessor
 from transformers.dynamic_module_utils import get_imports
 
 FLORENCE_CHECKPOINT = "microsoft/Florence-2-large"
+FLORENCE_OBJECT_DETECTION_TASK = '<OD>'
 FLORENCE_DETAILED_CAPTION_TASK = '<MORE_DETAILED_CAPTION>'
 FLORENCE_CAPTION_TO_PHRASE_GROUNDING_TASK = '<CAPTION_TO_PHRASE_GROUNDING>'
+FLORENCE_OPEN_VOCABULARY_DETECTION_TASK = '<OPEN_VOCABULARY_DETECTION>'
+FLORENCE_DENSE_REGION_CAPTION_TASK = '<DENSE_REGION_CAPTION>'
 
 
 def fixed_get_imports(filename: Union[str, os.PathLike]) -> list[str]:

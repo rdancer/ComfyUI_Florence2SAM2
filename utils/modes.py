@@ -1,0 +1,7 @@
+OPEN_VOCABULARY_DETECTION = "open vocabulary detection + masks"
+CAPTION_GROUNDING_MASKS = "caption + grounding + masks"
+
+INFERENCE_MODES = [
+    OPEN_VOCABULARY_DETECTION,
+    CAPTION_GROUNDING_MASKS
+]
