@@ -7,8 +7,8 @@ from PIL import Image
 from sam2.build_sam import build_sam2
 from sam2.sam2_image_predictor import SAM2ImagePredictor
 
-SAM_CHECKPOINT = "checkpoints/sam2_hiera_large.pt"
-SAM_CONFIG = "sam2_hiera_l.yaml"
+SAM_CHECKPOINT = "checkpoints/sam2_hiera_small.pt"
+SAM_CONFIG = "sam2_hiera_s.yaml"
 
 
 def load_sam_model(

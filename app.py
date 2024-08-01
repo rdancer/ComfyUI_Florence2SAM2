@@ -166,4 +166,4 @@ with gr.Blocks() as demo:
         ]
     )
 
-demo.launch(debug=False, show_error=True, max_threads=1)
+demo.launch(debug=False, show_error=True)
