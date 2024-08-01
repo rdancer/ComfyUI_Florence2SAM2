@@ -1,0 +1,8 @@
+einops
+spaces
+timm
+transformers
+samv2
+gradio
+supervision
+opencv-python
