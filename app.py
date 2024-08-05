@@ -15,10 +15,26 @@ from utils.sam import load_sam_model, run_sam_inference
 MARKDOWN = """
 # Florence2 + SAM2 🔥
 
-This demo integrates Florence2 and SAM2 models for detailed image captioning and object 
-detection. Florence2 generates detailed captions that are then used to perform phrase 
-grounding. The Segment Anything Model 2 (SAM2) converts these phrase-grounded boxes 
-into masks.
+<div>
+    <a href="https://github.com/facebookresearch/segment-anything-2">
+        <img src="https://badges.aleen42.com/src/github.svg" alt="GitHub" style="display:inline-block;">
+    </a>
+    <a href="https://colab.research.google.com/github/roboflow-ai/notebooks/blob/main/notebooks/how-to-segment-images-with-sam-2.ipynb">
+        <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Colab" style="display:inline-block;">
+    </a>
+    <a href="https://blog.roboflow.com/what-is-segment-anything-2/">
+        <img src="https://raw.githubusercontent.com/roboflow-ai/notebooks/main/assets/badges/roboflow-blogpost.svg" alt="Roboflow" style="display:inline-block;">
+    </a>
+    <a href="https://www.youtube.com/watch?v=Dv003fTyO-Y">
+        <img src="https://badges.aleen42.com/src/youtube.svg" alt="YouTube" style="display:inline-block;">
+    </a>
+</div>
+
+This demo integrates Florence2 and SAM2 by creating a two-stage inference pipeline. In 
+the first stage, Florence2 performs tasks such as object detection, open-vocabulary 
+object detection, image captioning, or phrase grounding. In the second stage, SAM2 
+performs object segmentation on the image. **Video segmentation will be available 
+soon.**
 """
 
 EXAMPLES = [
