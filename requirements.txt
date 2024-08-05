@@ -1,3 +1,4 @@
+tqdm
 einops
 spaces
 timm
