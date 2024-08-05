@@ -43,10 +43,15 @@ performs object segmentation on the image.
 """
 
 IMAGE_PROCESSING_EXAMPLES = [
-    [IMAGE_OPEN_VOCABULARY_DETECTION_MODE, "https://media.roboflow.com/notebooks/examples/dog-2.jpeg", 'straw, white napkin, black napkin, dog, hair, man'],
+    [IMAGE_OPEN_VOCABULARY_DETECTION_MODE, "https://media.roboflow.com/notebooks/examples/dog-2.jpeg", 'straw, white napkin, black napkin, hair'],
     [IMAGE_OPEN_VOCABULARY_DETECTION_MODE, "https://media.roboflow.com/notebooks/examples/dog-3.jpeg", 'tail'],
     [IMAGE_CAPTION_GROUNDING_MASKS_MODE, "https://media.roboflow.com/notebooks/examples/dog-2.jpeg", None],
     [IMAGE_CAPTION_GROUNDING_MASKS_MODE, "https://media.roboflow.com/notebooks/examples/dog-3.jpeg", None],
+]
+VIDEO_PROCESSING_EXAMPLES = [
+    ["videos/clip-07-camera-1.mp4", "player in white outfit, player in black outfit, ball, rim"],
+    ["videos/clip-07-camera-2.mp4", "player in white outfit, player in black outfit, ball, rim"],
+    ["videos/clip-07-camera-3.mp4", "player in white outfit, player in black outfit, ball, rim"]
 ]
 
 VIDEO_SCALE_FACTOR = 0.5
@@ -328,6 +333,18 @@ with gr.Blocks() as demo:
             with gr.Column():
                 video_processing_video_output_component = gr.Video(
                     label='Video output')
+            with gr.Row():
+                gr.Examples(
+                    fn=process_video,
+                    examples=VIDEO_PROCESSING_EXAMPLES,
+                    inputs=[
+                        video_processing_mode_dropdown_component,
+                        video_processing_video_input_component,
+                        video_processing_text_input_component
+                    ],
+                    outputs=video_processing_video_output_component,
+                    run_on_click=True
+                )
 
     image_processing_submit_button_component.click(
         fn=process_image,
