@@ -169,7 +169,7 @@ def process_image(
 @torch.inference_mode()
 @torch.autocast(device_type="cuda", dtype=torch.bfloat16)
 def process_video(
-    mode_dropdown, video_input, text_input, progress=gr.Progress(track_tqdm=True)
+    video_input, text_input, progress=gr.Progress(track_tqdm=True)
 ) -> Optional[str]:
     if not video_input:
         gr.Info("Please upload a video.")
@@ -333,18 +333,17 @@ with gr.Blocks() as demo:
             with gr.Column():
                 video_processing_video_output_component = gr.Video(
                     label='Video output')
-            with gr.Row():
-                gr.Examples(
-                    fn=process_video,
-                    examples=VIDEO_PROCESSING_EXAMPLES,
-                    inputs=[
-                        video_processing_mode_dropdown_component,
-                        video_processing_video_input_component,
-                        video_processing_text_input_component
-                    ],
-                    outputs=video_processing_video_output_component,
-                    run_on_click=True
-                )
+        with gr.Row():
+            gr.Examples(
+                fn=process_video,
+                examples=VIDEO_PROCESSING_EXAMPLES,
+                inputs=[
+                    video_processing_video_input_component,
+                    video_processing_text_input_component
+                ],
+                outputs=video_processing_video_output_component,
+                run_on_click=True
+            )
 
     image_processing_submit_button_component.click(
         fn=process_image,
@@ -381,7 +380,6 @@ with gr.Blocks() as demo:
     video_processing_submit_button_component.click(
         fn=process_video,
         inputs=[
-            video_processing_mode_dropdown_component,
             video_processing_video_input_component,
             video_processing_text_input_component
         ],
@@ -390,7 +388,6 @@ with gr.Blocks() as demo:
     video_processing_text_input_component.submit(
         fn=process_video,
         inputs=[
-            video_processing_mode_dropdown_component,
             video_processing_video_input_component,
             video_processing_text_input_component
         ],
