@@ -1,3 +1,8 @@
 /venv
 /.idea
 /tmp
+
+__pycache__/
+
+.*.sw?
+*~
