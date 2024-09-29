@@ -6,3 +6,6 @@ __pycache__/
 
 .*.sw?
 *~
+
+# something on my MacOS keeps saving these resource forks for every single file --rdancer
+.*

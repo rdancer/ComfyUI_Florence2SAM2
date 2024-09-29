@@ -20,7 +20,10 @@ def fixed_get_imports(filename: Union[str, os.PathLike]) -> list[str]:
     if not str(filename).endswith("/modeling_florence2.py"):
         return get_imports(filename)
     imports = get_imports(filename)
-    imports.remove("flash_attn")
+    try:
+        imports.remove("flash_attn")
+    except ValueError:
+        pass
     return imports
 
 

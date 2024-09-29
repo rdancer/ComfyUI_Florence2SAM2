@@ -14,3 +14,7 @@ Check out the configuration reference at https://huggingface.co/docs/hub/spaces-
 
 Code in this directory and its subdirectories based on SkalskiP's Florence 2 +
 SAM 2 space at https://huggingface.co/spaces/SkalskiP/florence-sam
+
+## Testing
+
+Run `python test.py test/*_source.png "products"` 👉 the resulting images must pixel-match `test/*_output.png`.
