@@ -1,64 +1,13 @@
 {
-  "last_node_id": 37,
-  "last_link_id": 30,
+  "last_node_id": 52,
+  "last_link_id": 50,
   "nodes": [
-    {
-      "id": 31,
-      "type": "PreviewImage",
-      "pos": [
-        637,
-        -21
-      ],
-      "size": [
-        471.42385827579574,
-        380.516185641299
-      ],
-      "flags": {},
-      "order": 4,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "images",
-          "type": "IMAGE",
-          "link": 26
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "PreviewImage"
-      }
-    },
-    {
-      "id": 32,
-      "type": "LayerMask: MaskPreview",
-      "pos": [
-        637,
-        433.2401813378308
-      ],
-      "size": [
-        477.1796594758039,
-        385.8974834570911
-      ],
-      "flags": {},
-      "order": 5,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "mask",
-          "type": "MASK",
-          "link": 27
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "LayerMask: MaskPreview"
-      },
-      "color": "rgba(27, 80, 119, 0.7)"
-    },
     {
       "id": 30,
       "type": "LoadImage",
       "pos": [
-        37,
-        -21
+        -241,
+        63
       ],
       "size": {
         "0": 278.3598327636719,
@@ -93,11 +42,95 @@
       ]
     },
     {
+      "id": 32,
+      "type": "LayerMask: MaskPreview",
+      "pos": [
+        553.8103742161225,
+        63
+      ],
+      "size": {
+        "0": 477.1796569824219,
+        "1": 385.8974914550781
+      },
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": 49
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LayerMask: MaskPreview"
+      },
+      "color": "rgba(27, 80, 119, 0.7)"
+    },
+    {
+      "id": 52,
+      "type": "RdancerFlorence2SAM2GenerateMask",
+      "pos": [
+        263,
+        768.9143663249481
+      ],
+      "size": [
+        285.0516880999385,
+        122
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 47
+        }
+      ],
+      "outputs": [
+        {
+          "name": "annotated_image",
+          "type": "IMAGE",
+          "links": [
+            48
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "mask",
+          "type": "MASK",
+          "links": [
+            49
+          ],
+          "shape": 3,
+          "slot_index": 1
+        },
+        {
+          "name": "masked_image",
+          "type": "IMAGE",
+          "links": [
+            50
+          ],
+          "shape": 3,
+          "slot_index": 2
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "RdancerFlorence2SAM2GenerateMask"
+      },
+      "widgets_values": [
+        "sam2_hiera_small.pt",
+        "subject"
+      ]
+    },
+    {
       "id": 37,
       "type": "ImageBatch",
       "pos": [
-        358,
-        118
+        263,
+        661
       ],
       "size": {
         "0": 210,
@@ -123,7 +156,7 @@
           "name": "IMAGE",
           "type": "IMAGE",
           "links": [
-            30
+            47
           ],
           "shape": 3,
           "slot_index": 0
@@ -134,59 +167,61 @@
       }
     },
     {
-      "id": 35,
-      "type": "RdancerFlorence2SAM2GenerateMask",
+      "id": 51,
+      "type": "PreviewImage",
       "pos": [
-        341,
-        213
+        560,
+        510
       ],
       "size": [
-        275.75400362280607,
-        78
+        470.99003119854433,
+        380.9143663249481
       ],
       "flags": {},
-      "order": 3,
+      "order": 6,
       "mode": 0,
       "inputs": [
         {
-          "name": "image",
+          "name": "images",
           "type": "IMAGE",
-          "link": 30
-        }
-      ],
-      "outputs": [
-        {
-          "name": "IMAGE",
-          "type": "IMAGE",
-          "links": [
-            26
-          ],
-          "shape": 3,
-          "slot_index": 0
-        },
-        {
-          "name": "MASK",
-          "type": "MASK",
-          "links": [
-            27
-          ],
-          "shape": 3,
-          "slot_index": 1
+          "link": 50
         }
       ],
       "properties": {
-        "Node name for S&R": "RdancerFlorence2SAM2GenerateMask"
+        "Node name for S&R": "PreviewImage"
+      }
+    },
+    {
+      "id": 31,
+      "type": "PreviewImage",
+      "pos": [
+        -241,
+        510
+      ],
+      "size": {
+        "0": 471.4238586425781,
+        "1": 380.51617431640625
       },
-      "widgets_values": [
-        "products"
-      ]
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 48
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      }
     },
     {
       "id": 36,
       "type": "LoadImage",
       "pos": [
-        37,
-        419
+        49,
+        63
       ],
       "size": {
         "0": 278.3598327636719,
@@ -223,22 +258,6 @@
   ],
   "links": [
     [
-      26,
-      35,
-      0,
-      31,
-      0,
-      "IMAGE"
-    ],
-    [
-      27,
-      35,
-      1,
-      32,
-      0,
-      "MASK"
-    ],
-    [
       28,
       30,
       0,
@@ -255,10 +274,34 @@
       "IMAGE"
     ],
     [
-      30,
+      47,
       37,
       0,
-      35,
+      52,
+      0,
+      "IMAGE"
+    ],
+    [
+      48,
+      52,
+      0,
+      31,
+      0,
+      "IMAGE"
+    ],
+    [
+      49,
+      52,
+      1,
+      32,
+      0,
+      "MASK"
+    ],
+    [
+      50,
+      52,
+      2,
+      51,
       0,
       "IMAGE"
     ]
@@ -267,10 +310,10 @@
   "config": {},
   "extra": {
     "ds": {
-      "scale": 1.6105100000000026,
+      "scale": 1.6350799082655874,
       "offset": {
-        "0": 213.80293488677194,
-        "1": 173.71430340991688
+        "0": 364.35376673177916,
+        "1": 70.73247236995553
       }
     }
   },
