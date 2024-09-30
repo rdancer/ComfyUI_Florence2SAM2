@@ -192,31 +192,6 @@
       }
     },
     {
-      "id": 31,
-      "type": "PreviewImage",
-      "pos": [
-        -241,
-        510
-      ],
-      "size": {
-        "0": 471.4238586425781,
-        "1": 380.51617431640625
-      },
-      "flags": {},
-      "order": 4,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "images",
-          "type": "IMAGE",
-          "link": 48
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "PreviewImage"
-      }
-    },
-    {
       "id": 36,
       "type": "LoadImage",
       "pos": [
@@ -254,6 +229,31 @@
         "Screenshot 2024-09-16 221234.png",
         "image"
       ]
+    },
+    {
+      "id": 31,
+      "type": "PreviewImage",
+      "pos": [
+        -241,
+        510
+      ],
+      "size": {
+        "0": 471.4238586425781,
+        "1": 380.51617431640625
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 48
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      }
     }
   ],
   "links": [
