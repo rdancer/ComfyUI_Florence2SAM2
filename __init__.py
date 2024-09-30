@@ -77,12 +77,14 @@ if __name__ == "__main__":
     # import rdancer_debug # will listen for debugger to attach
 
     def my_process_image(image_path, prompt):
+        from utils.sam import SAM_CHECKPOINT
         image = Image.open(image_path).convert("RGB")
-        annotated_image, mask = process_image(image, prompt)
-        output_image_path, output_mask_path = f"output_image_{os.path.basename(image_path)}", f"output_mask_{os.path.basename(image_path)}"
+        annotated_image, mask, masked_image = process_image(SAM_CHECKPOINT, image, prompt)
+        output_image_path, output_mask_path, output_masked_image_path = f"output_image_{os.path.basename(image_path)}", f"output_mask_{os.path.basename(image_path)}", f"output_masked_image_{os.path.basename(image_path)}"
         annotated_image.save(output_image_path)
         mask.save(output_mask_path)
-        return output_image_path, output_mask_path
+        masked_image.save(output_masked_image_path)
+        return output_image_path, output_mask_path, output_masked_image_path
 
     if len(sys.argv) < 2:
         print(f"Usage: python {os.path.basename(sys.argv[0])} <image_path>[ ...] [<prompt>]")
@@ -110,6 +112,6 @@ if __name__ == "__main__":
     from app import process_image
 
     for image in images:
-        output_image_path, mask_path = my_process_image(image, prompt)
-    print(f"Saved output image to {output_image_path} and mask to {mask_path}")
+        output_image_path, output_mask_path, output_masked_image_path = my_process_image(image, prompt)
+    print(f"Saved output image to {output_image_path} and mask to {output_mask_path} and masked image to {output_masked_image_path}")
 
