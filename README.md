@@ -1,20 +1,9 @@
----
-title: Florence2 + SAM2
-emoji: 🔥
-colorFrom: purple
-colorTo: green
-sdk: gradio
-sdk_version: 4.40.0
-app_file: app.py
-pinned: false
-license: apache-2.0
----
+ComfyUI custom node implementing Florence 2 + Segment Anything Model 2, based on [SkalskiP's HuggingFace space](https://huggingface.co/spaces/SkalskiP/florence-sam)
 
-Check out the configuration reference at https://huggingface.co/docs/hub/spaces-config-reference
+![sample workflow](workflows/workflow.png)
 
-Code in this directory and its subdirectories based on SkalskiP's Florence 2 +
-SAM 2 space at https://huggingface.co/spaces/SkalskiP/florence-sam
+*RdancerFlorence2SAM2GenerateMask* - the node is self-contained, and does not require separate model loaders. Models are lazy-loaded, and cached. Model unloading, if required, must be done manually.
 
 ## Testing
 
-Run `python test.py test/*_source.png "products"` 👉 the resulting images must pixel-match `test/*_output.png`.
+Run `python test.py test/*_source.png "products"` 👉 the resulting images must pixel-match `test/*output*`.
