@@ -68,64 +68,6 @@
       "color": "rgba(27, 80, 119, 0.7)"
     },
     {
-      "id": 52,
-      "type": "RdancerFlorence2SAM2GenerateMask",
-      "pos": [
-        263,
-        768.9143663249481
-      ],
-      "size": [
-        285.0516880999385,
-        122
-      ],
-      "flags": {},
-      "order": 3,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "image",
-          "type": "IMAGE",
-          "link": 47
-        }
-      ],
-      "outputs": [
-        {
-          "name": "annotated_image",
-          "type": "IMAGE",
-          "links": [
-            48
-          ],
-          "shape": 3,
-          "slot_index": 0
-        },
-        {
-          "name": "mask",
-          "type": "MASK",
-          "links": [
-            49
-          ],
-          "shape": 3,
-          "slot_index": 1
-        },
-        {
-          "name": "masked_image",
-          "type": "IMAGE",
-          "links": [
-            50
-          ],
-          "shape": 3,
-          "slot_index": 2
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "RdancerFlorence2SAM2GenerateMask"
-      },
-      "widgets_values": [
-        "sam2_hiera_small.pt",
-        "subject"
-      ]
-    },
-    {
       "id": 37,
       "type": "ImageBatch",
       "pos": [
@@ -254,6 +196,64 @@
       "properties": {
         "Node name for S&R": "PreviewImage"
       }
+    },
+    {
+      "id": 52,
+      "type": "RdancerFlorence2SAM2GenerateMask",
+      "pos": [
+        263,
+        768.9143663249481
+      ],
+      "size": [
+        285.0516880999385,
+        122
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 47
+        }
+      ],
+      "outputs": [
+        {
+          "name": "annotated_image",
+          "type": "IMAGE",
+          "links": [
+            48
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "mask",
+          "type": "MASK",
+          "links": [
+            49
+          ],
+          "shape": 3,
+          "slot_index": 1
+        },
+        {
+          "name": "masked_image",
+          "type": "IMAGE",
+          "links": [
+            50
+          ],
+          "shape": 3,
+          "slot_index": 2
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "RdancerFlorence2SAM2GenerateMask"
+      },
+      "widgets_values": [
+        "sam2_hiera_small.pt",
+        "products"
+      ]
     }
   ],
   "links": [
@@ -310,10 +310,10 @@
   "config": {},
   "extra": {
     "ds": {
-      "scale": 1.6350799082655874,
+      "scale": 1.486436280241443,
       "offset": {
-        "0": 364.35376673177916,
-        "1": 70.73247236995553
+        "0": 418.2350075396343,
+        "1": 89.96842480074564
       }
     }
   },
