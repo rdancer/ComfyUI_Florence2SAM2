@@ -10,7 +10,16 @@ except ImportError:
     from .utils.sam import model_to_config_map as sam_model_to_config_map
 
 
-# Format conversion helpersdapted from LayerStyle -- but LayerStyle has them wrong; there is no squeeze/unsqueeze
+# Format conversion helpers adapted from LayerStyle -- but LayerStyle has them
+# wrong: this is not the place to squeeze/unsqueeze.
+#
+# - [tensor2pil](https://github.com/chflame163/ComfyUI_LayerStyle/blob/28c1a4f3082d0af5067a7bc4b72951a8dd47b9b8/py/imagefunc.py#L131)
+# - [pil2tensor](https://github.com/chflame163/ComfyUI_LayerStyle/blob/28c1a4f3082d0af5067a7bc4b72951a8dd47b9b8/py/imagefunc.py#L111)
+#
+# LayerStyle wrongly, misguidedly, and confusingly, un/squeezes the batch
+# dimension in the helpers, and then in the main code, they have to reverse
+# that. The batch dimension is there for a reason, people, it's not something
+# to be abstracted away! So our version leaves that out.
 def tensor2pil(t_image: torch.Tensor)  -> Image.Image:
     return Image.fromarray(np.clip(255.0 * t_image.cpu().numpy(), 0, 255).astype(np.uint8))
 def pil2tensor(image: Image.Image) -> torch.Tensor:
