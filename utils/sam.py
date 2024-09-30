@@ -7,16 +7,23 @@ from PIL import Image
 from sam2.build_sam import build_sam2, build_sam2_video_predictor
 from sam2.sam2_image_predictor import SAM2ImagePredictor
 
-SAM_CHECKPOINT = "checkpoints/sam2_hiera_small.pt"
-SAM_CONFIG = "sam2_hiera_s.yaml"
-
+config_map = {
+    # models: sam2_hiera_base_plus.pt  sam2_hiera_large.pt  sam2_hiera_small.pt  sam2_hiera_tiny.pt
+    # configs: sam2_hiera_b+.yaml  sam2_hiera_l.yaml  sam2_hiera_s.yaml  sam2_hiera_t.yaml
+    "sam2_hiera_base_plus.pt": "sam2_hiera_b+.yaml",
+    "sam2_hiera_large.pt": "sam2_hiera_l.yaml",
+    "sam2_hiera_small.pt": "sam2_hiera_s.yaml",
+    "sam2_hiera_tiny.pt": "sam2_hiera_t.yaml",
+}
+SAM_CHECKPOINT = "sam2_hiera_small.pt"
+SAM_CONFIG = "sam2_hiera_s.yaml" # from /usr/local/lib/python3.10/dist-packages/sam2/configs, *not* from either the models directory, or this package's directory
 
 def load_sam_image_model(
     device: torch.device,
     config: str = SAM_CONFIG,
     checkpoint: str = SAM_CHECKPOINT
 ) -> SAM2ImagePredictor:
-    model = build_sam2(config, checkpoint, device=device)
+    model = build_sam2(config, f"models/sam2/{checkpoint}", device=device)
     return SAM2ImagePredictor(sam_model=model)
 
 

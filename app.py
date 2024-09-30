@@ -2,21 +2,33 @@ import os
 from typing import Tuple, Optional
 
 import cv2
-import gradio as gr
+# import gradio as gr # Gradio phones home, we don't want that
 import numpy as np
-import spaces
+# import spaces
 import supervision as sv
 import torch
 from PIL import Image
 from tqdm import tqdm
-from utils.video import generate_unique_name, create_directory, delete_directory
 
-from utils.florence import load_florence_model, run_florence_inference, \
-    FLORENCE_OPEN_VOCABULARY_DETECTION_TASK #,
-    # FLORENCE_DETAILED_CAPTION_TASK, FLORENCE_CAPTION_TO_PHRASE_GROUNDING_TASK
-from utils.modes import IMAGE_INFERENCE_MODES, IMAGE_OPEN_VOCABULARY_DETECTION_MODE #, \
-    # IMAGE_CAPTION_GROUNDING_MASKS_MODE, VIDEO_INFERENCE_MODES
-from utils.sam import load_sam_image_model, run_sam_inference #, load_sam_video_model
+try:
+    from utils.video import generate_unique_name, create_directory, delete_directory
+
+    from utils.florence import load_florence_model, run_florence_inference, \
+        FLORENCE_OPEN_VOCABULARY_DETECTION_TASK #,
+        # FLORENCE_DETAILED_CAPTION_TASK, FLORENCE_CAPTION_TO_PHRASE_GROUNDING_TASK
+    from utils.modes import IMAGE_INFERENCE_MODES, IMAGE_OPEN_VOCABULARY_DETECTION_MODE #, \
+        # IMAGE_CAPTION_GROUNDING_MASKS_MODE, VIDEO_INFERENCE_MODES
+    from utils.sam import load_sam_image_model, run_sam_inference #, load_sam_video_model
+except ImportError:
+    # We're running as a module
+    from .utils.video import generate_unique_name, create_directory, delete_directory
+
+    from .utils.florence import load_florence_model, run_florence_inference, \
+        FLORENCE_OPEN_VOCABULARY_DETECTION_TASK #,
+        # FLORENCE_DETAILED_CAPTION_TASK, FLORENCE_CAPTION_TO_PHRASE_GROUNDING_TASK
+    from .utils.modes import IMAGE_INFERENCE_MODES, IMAGE_OPEN_VOCABULARY_DETECTION_MODE #, \
+        # IMAGE_CAPTION_GROUNDING_MASKS_MODE, VIDEO_INFERENCE_MODES
+    from .utils.sam import load_sam_image_model, run_sam_inference #, load_sam_video_model
 
 # MARKDOWN = """
 # # Florence2 + SAM2 🔥
@@ -101,21 +113,38 @@ def annotate_image(image, detections):
 #     ]
 
 
-def process_image(image: Image.Image, promt: str) -> Tuple[Optional[Image.Image], Optional[str]]:
-    return _process_image(IMAGE_OPEN_VOCABULARY_DETECTION_MODE, image, promt)
+def process_image(image: Image.Image, promt: str) -> Tuple[Optional[Image.Image], Optional[Image.Image]]:
+    annotated_image, mask_list = _process_image(IMAGE_OPEN_VOCABULARY_DETECTION_MODE, image, promt)
+    if mask_list is not None and len(mask_list) > 0:
+        mask = np.any(mask_list, axis=0) # Merge masks into a single mask
+        mask = (mask * 255).astype(np.uint8)
+    else:
+        print(f"Florence2SAM2: No objects of class {promt} found in the image.")
+        mask = np.zeros((image.height, image.width), dtype=np.uint8)
+    mask = Image.fromarray(mask).convert("L") # Convert to 8-bit grayscale
+    return annotated_image, mask
 
 @torch.inference_mode()
 @torch.autocast(device_type="cuda", dtype=torch.bfloat16)
 def _process_image(
     mode_dropdown=IMAGE_OPEN_VOCABULARY_DETECTION_MODE, image_input=None, text_input=None
-) -> Tuple[Optional[Image.Image], Optional[str]]:
+) -> Tuple[Optional[Image.Image], Optional[np.ndarray]]:
+    """
+    Process an image with Florence2 and SAM2.
+
+    @param mode_dropdown: The mode of the Florence2 model. Must be IMAGE_OPEN_VOCABULARY_DETECTION_MODE.
+    @param image_input: The image to process.
+    @param text_input: The text prompt to use for the Florence2 model.
+
+    @return: Tuple[Image.Image, Image.Image]: The annotated image, merged mask (Boolean array) of the detected objects
+    """
     if not image_input:
-        gr.Info("Please upload an image.")
+        # gr.Info("Please upload an image.")
         return None, None
 
     if mode_dropdown == IMAGE_OPEN_VOCABULARY_DETECTION_MODE:
         if not text_input:
-            gr.Info("Please enter a text prompt.")
+            # gr.Info("Please enter a text prompt.")
             return None, None
 
         texts = [prompt.strip() for prompt in text_input.split(",")]
@@ -139,7 +168,7 @@ def _process_image(
 
         detections = sv.Detections.merge(detections_list)
         detections = run_sam_inference(SAM_IMAGE_MODEL, image_input, detections)
-        return annotate_image(image_input, detections), None
+        return annotate_image(image_input, detections), detections.mask
 
 #     if mode_dropdown == IMAGE_CAPTION_GROUNDING_MASKS_MODE:
 #         _, result = run_florence_inference(
