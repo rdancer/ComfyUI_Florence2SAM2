@@ -79,8 +79,8 @@ if torch.cuda.get_device_properties(0).major >= 8:
     torch.backends.cudnn.allow_tf32 = True
 
 
-FLORENCE_MODEL, FLORENCE_PROCESSOR = load_florence_model(device=DEVICE)
-SAM_IMAGE_MODEL = load_sam_image_model(device=DEVICE)
+FLORENCE_MODEL, FLORENCE_PROCESSOR = None, None
+SAM_IMAGE_MODEL = None
 # SAM_VIDEO_MODEL = load_sam_video_model(device=DEVICE)
 COLORS = ['#FF1493', '#00BFFF', '#FF6347', '#FFD700', '#32CD32', '#8A2BE2']
 COLOR_PALETTE = sv.ColorPalette.from_hex(COLORS)
@@ -112,8 +112,20 @@ def annotate_image(image, detections):
 #         gr.Textbox(visible=text == IMAGE_CAPTION_GROUNDING_MASKS_MODE),
 #     ]
 
+def lazy_load_models(sam_image_model: str):
+    global SAM_IMAGE_MODEL
+    global FLORENCE_MODEL
+    global FLORENCE_PROCESSOR
+    if SAM_IMAGE_MODEL is None: 
+        SAM_IMAGE_MODEL = load_sam_image_model(device=DEVICE, checkpoint=sam_image_model)
+    elif SAM_IMAGE_MODEL != sam_image_model:
+        # TODO: should we somehow unload the old model?
+        SAM_IMAGE_MODEL = load_sam_image_model(device=DEVICE, checkpoint=sam_image_model)
+    if FLORENCE_MODEL is None or FLORENCE_PROCESSOR is None:
+        FLORENCE_MODEL, FLORENCE_PROCESSOR = load_florence_model(device=DEVICE)
 
-def process_image(image: Image.Image, promt: str) -> Tuple[Optional[Image.Image], Optional[Image.Image]]:
+def process_image(sam_image_model: str, image: Image.Image, promt: str) -> Tuple[Optional[Image.Image], Optional[Image.Image], Optional[Image.Image]]:
+    lazy_load_models(sam_image_model)
     annotated_image, mask_list = _process_image(IMAGE_OPEN_VOCABULARY_DETECTION_MODE, image, promt)
     if mask_list is not None and len(mask_list) > 0:
         mask = np.any(mask_list, axis=0) # Merge masks into a single mask
@@ -122,7 +134,9 @@ def process_image(image: Image.Image, promt: str) -> Tuple[Optional[Image.Image]
         print(f"Florence2SAM2: No objects of class {promt} found in the image.")
         mask = np.zeros((image.height, image.width), dtype=np.uint8)
     mask = Image.fromarray(mask).convert("L") # Convert to 8-bit grayscale
-    return annotated_image, mask
+    masked_image = Image.new("RGB", image.size, (0, 0, 0))
+    masked_image.paste(image, mask=mask)
+    return annotated_image, mask, masked_image
 
 @torch.inference_mode()
 @torch.autocast(device_type="cuda", dtype=torch.bfloat16)
@@ -132,12 +146,18 @@ def _process_image(
     """
     Process an image with Florence2 and SAM2.
 
+    Note that the models are lazy loaded, so they will not waste time loading during startup, or at all if this method is not called.
+
     @param mode_dropdown: The mode of the Florence2 model. Must be IMAGE_OPEN_VOCABULARY_DETECTION_MODE.
     @param image_input: The image to process.
     @param text_input: The text prompt to use for the Florence2 model.
 
     @return: Tuple[Image.Image, Image.Image]: The annotated image, merged mask (Boolean array) of the detected objects
     """
+    global SAM_IMAGE_MODEL
+    global FLORENCE_MODEL
+    global FLORENCE_PROCESSOR
+
     if not image_input:
         # gr.Info("Please upload an image.")
         return None, None

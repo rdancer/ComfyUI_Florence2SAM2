@@ -7,7 +7,7 @@ from PIL import Image
 from sam2.build_sam import build_sam2, build_sam2_video_predictor
 from sam2.sam2_image_predictor import SAM2ImagePredictor
 
-config_map = {
+model_to_config_map = {
     # models: sam2_hiera_base_plus.pt  sam2_hiera_large.pt  sam2_hiera_small.pt  sam2_hiera_tiny.pt
     # configs: sam2_hiera_b+.yaml  sam2_hiera_l.yaml  sam2_hiera_s.yaml  sam2_hiera_t.yaml
     "sam2_hiera_base_plus.pt": "sam2_hiera_b+.yaml",
@@ -20,9 +20,11 @@ SAM_CONFIG = "sam2_hiera_s.yaml" # from /usr/local/lib/python3.10/dist-packages/
 
 def load_sam_image_model(
     device: torch.device,
-    config: str = SAM_CONFIG,
-    checkpoint: str = SAM_CHECKPOINT
+    checkpoint: str = SAM_CHECKPOINT,
+    config: str = None
 ) -> SAM2ImagePredictor:
+    if config is None:
+        config = model_to_config_map[checkpoint]
     model = build_sam2(config, f"models/sam2/{checkpoint}", device=device)
     return SAM2ImagePredictor(sam_model=model)
 
