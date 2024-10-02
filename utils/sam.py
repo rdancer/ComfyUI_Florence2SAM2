@@ -1,6 +1,7 @@
 from typing import Any
 import os
 
+import folder_paths
 import numpy as np
 import supervision as sv
 import torch
@@ -33,13 +34,10 @@ def load_sam_image_model(
     print(f"Current working directory: {current_working_directory}", flush=True)
     
     # 2. Check if the "models" and "models/sam2" directories exist
-    models_dir = os.path.join(current_working_directory, "models")
-    if not os.path.exists(models_dir):
-        # We're probably on Windows
-        models_dir = os.path.join(current_working_directory, "ComfyUI", "models")
+    models_dir = folder_paths.models_dir
     sam2_dir = os.path.join(models_dir, "sam2")
     
-    if not os.path.exists(models_dir):
+    if os.path.exists(models_dir):
         print(f"'models' directory exists: {models_dir}", flush=True)
     else:
         print(f"'models' directory does not exist: {models_dir}", flush=True)
@@ -55,9 +53,7 @@ def load_sam_image_model(
     else:
         print(f"'models/sam2/{checkpoint}' directory does not exist: {model_path}", flush=True)
 
-    try:
-        model = build_sam2(config, model_path, device=device)
-    except:
+    model = build_sam2(config, model_path, device=device)
     return SAM2ImagePredictor(sam_model=model)
 
 
