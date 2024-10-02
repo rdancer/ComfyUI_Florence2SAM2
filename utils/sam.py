@@ -26,7 +26,32 @@ def load_sam_image_model(
 ) -> SAM2ImagePredictor:
     if config is None:
         config = model_to_config_map[checkpoint]
+    import os
+    
+    # 1. Print the current working directory with flush=True
+    current_working_directory = os.getcwd()
+    print(f"Current working directory: {current_working_directory}", flush=True)
+    
+    # 2. Check if the "models" and "models/sam2" directories exist
+    models_dir = os.path.join(current_working_directory, "models")
+    sam2_dir = os.path.join(models_dir, "sam2")
+    
+    if os.path.exists(models_dir):
+        print(f"'models' directory exists: {models_dir}", flush=True)
+    else:
+        print(f"'models' directory does not exist: {models_dir}", flush=True)
+    
+    if os.path.exists(sam2_dir):
+        print(f"'models/sam2' directory exists: {sam2_dir}", flush=True)
+    else:
+        print(f"'models/sam2' directory does not exist: {sam2_dir}", flush=True)
+        
     model_path = os.path.join("models", "sam2", checkpoint)
+     if os.path.exists(model_path):
+        print(f"'models/sam2/{checkpoint}' directory exists: {model_path}", flush=True)
+    else:
+        print(f"'models/sam2/{checkpoint}' directory does not exist: {model_path}", flush=True)
+
     model = build_sam2(config, model_path, device=device)
     return SAM2ImagePredictor(sam_model=model)
 
