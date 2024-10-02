@@ -1,4 +1,5 @@
 from typing import Any
+import os
 
 import numpy as np
 import supervision as sv
@@ -25,7 +26,8 @@ def load_sam_image_model(
 ) -> SAM2ImagePredictor:
     if config is None:
         config = model_to_config_map[checkpoint]
-    model = build_sam2(config, f"models/sam2/{checkpoint}", device=device)
+    model_path = os.path.join("models", "sam2", checkpoint)
+    model = build_sam2(config, model_path, device=device)
     return SAM2ImagePredictor(sam_model=model)
 
 
