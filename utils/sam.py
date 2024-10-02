@@ -47,7 +47,7 @@ def load_sam_image_model(
         print(f"'models/sam2' directory does not exist: {sam2_dir}", flush=True)
         
     model_path = os.path.join("models", "sam2", checkpoint)
-     if os.path.exists(model_path):
+    if os.path.exists(model_path):
         print(f"'models/sam2/{checkpoint}' directory exists: {model_path}", flush=True)
     else:
         print(f"'models/sam2/{checkpoint}' directory does not exist: {model_path}", flush=True)
