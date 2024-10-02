@@ -47,11 +47,11 @@ def load_sam_image_model(
     else:
         print(f"'models/sam2' directory does not exist: {sam2_dir}", flush=True)
         
-    model_path = os.path.join("models", "sam2", checkpoint)
+    model_path = os.path.join(sam2_dir, checkpoint)
     if os.path.exists(model_path):
-        print(f"'models/sam2/{checkpoint}' directory exists: {model_path}", flush=True)
+        print(f"'models/sam2/{checkpoint}' file exists: {model_path}", flush=True)
     else:
-        print(f"'models/sam2/{checkpoint}' directory does not exist: {model_path}", flush=True)
+        print(f"'models/sam2/{checkpoint}' file does not exist: {model_path}", flush=True)
 
     model = build_sam2(config, model_path, device=device)
     return SAM2ImagePredictor(sam_model=model)
