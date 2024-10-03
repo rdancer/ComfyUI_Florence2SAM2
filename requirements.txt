@@ -10,4 +10,4 @@ pytest
 
 #samv2
 # Rdancer's version of samv2 includes a fix that makes it not crash on Windows
-git+https://github.com/rdancer/sam2.git@main#egg=samv2
+git+https://github.com/rdancer/samv2.git
