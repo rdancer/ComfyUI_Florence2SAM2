@@ -1,6 +1,7 @@
 import torch
 from PIL import Image
 import numpy as np
+import os
 
 try:
     from app import process_image
@@ -30,7 +31,15 @@ def pil2tensor(image: Image.Image) -> torch.Tensor:
 
 class F2S2GenerateMask:
     def __init__(self):
-        pass
+        self._enable_cudnn_sdpa()
+
+    def _enable_cudnn_sdpa(self):
+        # Check if the environment variable is already set
+        if os.getenv('TORCH_CUDNN_SDPA_ENABLED') != '1':
+            os.environ['TORCH_CUDNN_SDPA_ENABLED'] = '1'
+            print("CuDNN SDPA enabled.")
+        else:
+            print("CuDNN SDPA was already enabled.")
 
     @classmethod
     def INPUT_TYPES(cls):
