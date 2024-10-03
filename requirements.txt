@@ -3,8 +3,11 @@ einops
 spaces
 timm
 transformers
-samv2
 gradio
 supervision
 opencv-python
 pytest
+
+#samv2
+# Rdancer's version of samv2 includes a fix that makes it not crash on Windows
+https://github.com/rdancer/sam2
