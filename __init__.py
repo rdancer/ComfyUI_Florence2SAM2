@@ -31,9 +31,15 @@ def pil2tensor(image: Image.Image) -> torch.Tensor:
 
 class F2S2GenerateMask:
     def __init__(self):
-        self._enable_cudnn_sdpa()
+        if platform.system() == "Windows":
+            self._fix_problems()
 
-    def _enable_cudnn_sdpa(self):
+    def _fix_problems(self):
+        print("disabling gradients and optimisations")
+        torch.backends.cudnn.enabled = False        
+        print("setting CUDA_LAUNCH_BLOCKING=1 TORCH_USE_RTLD_GLOBAL=1")
+        os.environ['CUDA_LAUNCH_BLOCKING'] = '1'
+        os.environ['TORCH_USE_RTLD_GLOBAL'] = '1'
         # Check if the environment variable is already set
         if os.getenv('TORCH_CUDNN_SDPA_ENABLED') != '1':
             os.environ['TORCH_CUDNN_SDPA_ENABLED'] = '1'
