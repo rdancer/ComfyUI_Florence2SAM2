@@ -8,6 +8,8 @@ supervision
 opencv-python
 pytest
 
+# Build dependency; getting errors so try putting it here
+flit_core>=3.2,<4
 #samv2
 # Rdancer's version of samv2 includes a fix that makes it not crash on Windows
 git+https://github.com/rdancer/samv2.git
