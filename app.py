@@ -70,7 +70,7 @@ except ImportError:
 # VIDEO_TARGET_DIRECTORY = "tmp"
 # create_directory(directory_path=VIDEO_TARGET_DIRECTORY)
 
-DEVICE = torch.device("cuda")
+DEVICE = None #torch.device("cuda")
 # DEVICE = torch.device("cpu")
 
 torch.autocast(device_type="cuda", dtype=torch.bfloat16).__enter__()
@@ -112,10 +112,16 @@ def annotate_image(image, detections):
 #         gr.Textbox(visible=text == IMAGE_CAPTION_GROUNDING_MASKS_MODE),
 #     ]
 
-def lazy_load_models(sam_image_model: str):
+def lazy_load_models(device: torch.device, sam_image_model: str):
     global SAM_IMAGE_MODEL
     global FLORENCE_MODEL
     global FLORENCE_PROCESSOR
+    global DEVICE
+    if device != DEVICE:
+        SAM_IMAGE_MODEL = None
+        FLORENCE_MODEL = None
+        FLORENCE_PROCESSOR = None
+        DEVICE = device
     if SAM_IMAGE_MODEL is None: 
         SAM_IMAGE_MODEL = load_sam_image_model(device=DEVICE, checkpoint=sam_image_model)
     elif SAM_IMAGE_MODEL != sam_image_model:
@@ -124,8 +130,8 @@ def lazy_load_models(sam_image_model: str):
     if FLORENCE_MODEL is None or FLORENCE_PROCESSOR is None:
         FLORENCE_MODEL, FLORENCE_PROCESSOR = load_florence_model(device=DEVICE)
 
-def process_image(sam_image_model: str, image: Image.Image, promt: str) -> Tuple[Optional[Image.Image], Optional[Image.Image], Optional[Image.Image]]:
-    lazy_load_models(sam_image_model)
+def process_image(device: torch.device, sam_image_model: str, image: Image.Image, promt: str) -> Tuple[Optional[Image.Image], Optional[Image.Image], Optional[Image.Image]]:
+    lazy_load_models(device, sam_image_model)
     annotated_image, mask_list = _process_image(IMAGE_OPEN_VOCABULARY_DETECTION_MODE, image, promt)
     if mask_list is not None and len(mask_list) > 0:
         mask = np.any(mask_list, axis=0) # Merge masks into a single mask

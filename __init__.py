@@ -53,9 +53,11 @@ class F2S2GenerateMask:
     def INPUT_TYPES(cls):
         model_list = list(sam_model_to_config_map.keys())
         model_list.sort()
+        device_list = ["cuda", "cpu"]
         return {
             "required": {
                 "sam2_model": (model_list, {"default": "sam2_hiera_small.pt"}),
+                "device": (device_list,),
                 "image": ("IMAGE",),
                 "prompt": ("STRING", {"default": "subject"}),
             }
@@ -66,14 +68,15 @@ class F2S2GenerateMask:
     FUNCTION = "_process_image"
     CATEGORY = "💃rDancer"
 
-    def _process_image(self, sam2_model: str, image: torch.Tensor, prompt: str = None):
+    def _process_image(self, sam2_model: str, device: str, image: torch.Tensor, prompt: str = None):
+        torch_device = torch.device(device)
         prompt = prompt.strip() if prompt else ""
         annotated_images, masks, masked_images = [], [], []
         # Convert image from tensor to PIL
         # the image has an extra batch dimension, despite the variable name
         for img in image:
             img = tensor2pil(img).convert("RGB")
-            annotated_image, mask, masked_image = process_image(sam2_model, img, prompt)
+            annotated_image, mask, masked_image = process_image(torch_device, sam2_model, img, prompt)
             annotated_images.append(pil2tensor(annotated_image))
             masks.append(pil2tensor(mask))
             masked_images.append(pil2tensor(masked_image))
