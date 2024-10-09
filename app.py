@@ -9,6 +9,7 @@ import supervision as sv
 import torch
 from PIL import Image
 from tqdm import tqdm
+import gc
 
 try:
     from utils.video import generate_unique_name, create_directory, delete_directory
@@ -114,6 +115,7 @@ def annotate_image(image, detections):
 
 def lazy_load_models(device: torch.device, sam_image_model: str):
     global SAM_IMAGE_MODEL
+    global loaded_sam_image_model
     global FLORENCE_MODEL
     global FLORENCE_PROCESSOR
     global DEVICE
@@ -124,10 +126,17 @@ def lazy_load_models(device: torch.device, sam_image_model: str):
         DEVICE = device
     if SAM_IMAGE_MODEL is None: 
         SAM_IMAGE_MODEL = load_sam_image_model(device=DEVICE, checkpoint=sam_image_model)
-    elif SAM_IMAGE_MODEL != sam_image_model:
-        # TODO: should we somehow unload the old model?
+        loaded_sam_image_model = sam_image_model
+    elif loaded_sam_image_model != sam_image_model:
+        print(f"DEBUG [ComfyUI_Florence2SAM2::lazy_load_models] Old model {loaded_sam_image_model} != new model {sam_image_model} => releasing memory")
+        SAM_IMAGE_MODEL.model.cpu()
+        del SAM_IMAGE_MODEL
+        gc.collect()
+        torch.cuda.empty_cache()
         SAM_IMAGE_MODEL = load_sam_image_model(device=DEVICE, checkpoint=sam_image_model)
+        loaded_sam_image_model = sam_image_model
     if FLORENCE_MODEL is None or FLORENCE_PROCESSOR is None:
+        assert FLORENCE_MODEL is None and FLORENCE_PROCESSOR is None
         FLORENCE_MODEL, FLORENCE_PROCESSOR = load_florence_model(device=DEVICE)
 
 def process_image(device: torch.device, sam_image_model: str, image: Image.Image, promt: str) -> Tuple[Optional[Image.Image], Optional[Image.Image], Optional[Image.Image]]:
