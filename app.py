@@ -11,6 +11,8 @@ from PIL import Image
 from tqdm import tqdm
 import gc
 
+import comfy.model_management as mm
+
 try:
     from utils.video import generate_unique_name, create_directory, delete_directory
 
@@ -120,9 +122,7 @@ def lazy_load_models(device: torch.device, sam_image_model: str):
     global FLORENCE_PROCESSOR
     global DEVICE
     if device != DEVICE:
-        SAM_IMAGE_MODEL = None
-        FLORENCE_MODEL = None
-        FLORENCE_PROCESSOR = None
+        offload_models(delete=True)
         DEVICE = device
     if SAM_IMAGE_MODEL is None: 
         SAM_IMAGE_MODEL = load_sam_image_model(device=DEVICE, checkpoint=sam_image_model)
@@ -139,7 +139,47 @@ def lazy_load_models(device: torch.device, sam_image_model: str):
         assert FLORENCE_MODEL is None and FLORENCE_PROCESSOR is None
         FLORENCE_MODEL, FLORENCE_PROCESSOR = load_florence_model(device=DEVICE)
 
-def process_image(device: torch.device, sam_image_model: str, image: Image.Image, promt: str) -> Tuple[Optional[Image.Image], Optional[Image.Image], Optional[Image.Image]]:
+    # The models could have been offloaded to RAM by offload_models(); if they're already on `device`, this is a no-op
+    SAM_IMAGE_MODEL.model.to(device)
+    FLORENCE_MODEL.to(device)
+    # FLORENCE_PROCESSOR.to(device) # note a model
+
+def offload_models(delete=False):
+    global SAM_IMAGE_MODEL
+    global FLORENCE_MODEL
+    global FLORENCE_PROCESSOR
+    offload_device = mm.unet_offload_device()
+    do_gc = False
+    if SAM_IMAGE_MODEL is not None:
+        if delete:
+            SAM_IMAGE_MODEL.model.cpu()
+            del SAM_IMAGE_MODEL
+            SAM_IMAGE_MODEL = None
+            do_gc = True
+        else:
+            SAM_IMAGE_MODEL.model.to(offload_device)
+    if FLORENCE_MODEL is not None:
+        if delete:
+            FLORENCE_MODEL.cpu()
+            del FLORENCE_MODEL
+            FLORENCE_MODEL = None
+            do_gc = True
+        else:
+            FLORENCE_MODEL.to(offload_device)
+    if FLORENCE_PROCESSOR is not None:
+        if delete:
+            # FLORENCE_PROCESSOR.cpu()
+            del FLORENCE_PROCESSOR
+            FLORENCE_PROCESSOR = None
+            do_gc = True
+        else:
+            # FLORENCE_PROCESSOR.cpu()
+            pass
+    mm.soft_empty_cache()
+    if do_gc:
+        gc.collect()
+
+def process_image(device: torch.device, sam_image_model: str, image: Image.Image, promt: str, keep_model_loaded: bool) -> Tuple[Optional[Image.Image], Optional[Image.Image], Optional[Image.Image]]:
     lazy_load_models(device, sam_image_model)
     annotated_image, mask_list = _process_image(IMAGE_OPEN_VOCABULARY_DETECTION_MODE, image, promt)
     if mask_list is not None and len(mask_list) > 0:
@@ -151,6 +191,8 @@ def process_image(device: torch.device, sam_image_model: str, image: Image.Image
     mask = Image.fromarray(mask).convert("L") # Convert to 8-bit grayscale
     masked_image = Image.new("RGB", image.size, (0, 0, 0))
     masked_image.paste(image, mask=mask)
+    if not keep_model_loaded:
+        offload_models()
     return annotated_image, mask, masked_image
 
 @torch.inference_mode()

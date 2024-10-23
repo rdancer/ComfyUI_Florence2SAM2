@@ -60,6 +60,9 @@ class F2S2GenerateMask:
                 "device": (device_list,),
                 "image": ("IMAGE",),
                 "prompt": ("STRING", {"default": "subject"}),
+            },
+            "optional": {
+                "keep_model_loaded": ("BOOLEAN", {"default": False}),
             }
         }
 
@@ -68,15 +71,16 @@ class F2S2GenerateMask:
     FUNCTION = "_process_image"
     CATEGORY = "💃rDancer"
 
-    def _process_image(self, sam2_model: str, device: str, image: torch.Tensor, prompt: str = None):
+    def _process_image(self, sam2_model: str, device: str, image: torch.Tensor, prompt: str = None, keep_model_loaded: bool = False):
         torch_device = torch.device(device)
         prompt = prompt.strip() if prompt else ""
         annotated_images, masks, masked_images = [], [], []
         # Convert image from tensor to PIL
         # the image has an extra batch dimension, despite the variable name
-        for img in image:
+        for i, img in enumerate(image):
             img = tensor2pil(img).convert("RGB")
-            annotated_image, mask, masked_image = process_image(torch_device, sam2_model, img, prompt)
+            keep_model_loaded = keep_model_loaded if i == (image.size(0) - 1) else True
+            annotated_image, mask, masked_image = process_image(torch_device, sam2_model, img, prompt, keep_model_loaded)
             annotated_images.append(pil2tensor(annotated_image))
             masks.append(pil2tensor(mask))
             masked_images.append(pil2tensor(masked_image))
