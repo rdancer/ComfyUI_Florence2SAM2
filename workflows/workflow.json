@@ -1,6 +1,6 @@
 {
-  "last_node_id": 58,
-  "last_link_id": 60,
+  "last_node_id": 61,
+  "last_link_id": 68,
   "nodes": [
     {
       "id": 30,
@@ -100,7 +100,7 @@
         {
           "name": "images",
           "type": "IMAGE",
-          "link": 58
+          "link": 66
         }
       ],
       "outputs": [],
@@ -127,7 +127,7 @@
         {
           "name": "images",
           "type": "IMAGE",
-          "link": 57
+          "link": 68
         }
       ],
       "outputs": [],
@@ -164,43 +164,6 @@
       "widgets_values": []
     },
     {
-      "id": 57,
-      "type": "MaskToImage",
-      "pos": {
-        "0": 860,
-        "1": 1320
-      },
-      "size": {
-        "0": 264.5999755859375,
-        "1": 26
-      },
-      "flags": {},
-      "order": 5,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "mask",
-          "type": "MASK",
-          "link": 59
-        }
-      ],
-      "outputs": [
-        {
-          "name": "IMAGE",
-          "type": "IMAGE",
-          "links": [
-            60
-          ],
-          "slot_index": 0,
-          "shape": 3
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "MaskToImage"
-      },
-      "widgets_values": []
-    },
-    {
       "id": 37,
       "type": "ImageBatch",
       "pos": {
@@ -231,7 +194,7 @@
           "name": "IMAGE",
           "type": "IMAGE",
           "links": [
-            56
+            65
           ],
           "slot_index": 0,
           "shape": 3
@@ -243,7 +206,44 @@
       "widgets_values": []
     },
     {
-      "id": 56,
+      "id": 57,
+      "type": "MaskToImage",
+      "pos": {
+        "0": 856,
+        "1": 1335
+      },
+      "size": {
+        "0": 264.5999755859375,
+        "1": 26
+      },
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": 67
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            60
+          ],
+          "slot_index": 0,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "MaskToImage"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 60,
       "type": "RdancerFlorence2SAM2GenerateMask",
       "pos": {
         "0": 840,
@@ -251,7 +251,7 @@
       },
       "size": {
         "0": 303.60308837890625,
-        "1": 146
+        "1": 170
       },
       "flags": {},
       "order": 3,
@@ -260,7 +260,7 @@
         {
           "name": "image",
           "type": "IMAGE",
-          "link": 56
+          "link": 65
         }
       ],
       "outputs": [
@@ -268,27 +268,24 @@
           "name": "annotated_image",
           "type": "IMAGE",
           "links": [
-            58
+            66
           ],
-          "slot_index": 0,
           "shape": 3
         },
         {
           "name": "mask",
           "type": "MASK",
           "links": [
-            59
+            67
           ],
-          "slot_index": 1,
           "shape": 3
         },
         {
           "name": "masked_image",
           "type": "IMAGE",
           "links": [
-            57
+            68
           ],
-          "slot_index": 2,
           "shape": 3
         }
       ],
@@ -298,7 +295,8 @@
       "widgets_values": [
         "sam2_hiera_small.pt",
         "cuda",
-        "products"
+        "products",
+        false
       ]
     }
   ],
@@ -320,42 +318,42 @@
       "IMAGE"
     ],
     [
-      56,
+      60,
+      57,
+      0,
+      58,
+      0,
+      "IMAGE"
+    ],
+    [
+      65,
       37,
       0,
-      56,
+      60,
       0,
       "IMAGE"
     ],
     [
-      57,
-      56,
-      2,
-      51,
-      0,
-      "IMAGE"
-    ],
-    [
-      58,
-      56,
+      66,
+      60,
       0,
       31,
       0,
       "IMAGE"
     ],
     [
-      59,
-      56,
+      67,
+      60,
       1,
       57,
       0,
       "MASK"
     ],
     [
+      68,
       60,
-      57,
-      0,
-      58,
+      2,
+      51,
       0,
       "IMAGE"
     ]
@@ -364,10 +362,10 @@
   "config": {},
   "extra": {
     "ds": {
-      "scale": 1.2839025177495011,
+      "scale": 2.0677378438607503,
       "offset": [
-        -279.5410202465874,
-        -342.9758340690436
+        -675.6252784124076,
+        -892.8859744309092
       ]
     }
   },
