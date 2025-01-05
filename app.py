@@ -76,11 +76,15 @@ except ImportError:
 DEVICE = None #torch.device("cuda")
 # DEVICE = torch.device("cpu")
 
-torch.autocast(device_type="cuda", dtype=torch.bfloat16).__enter__()
-if torch.cuda.get_device_properties(0).major >= 8:
-    torch.backends.cuda.matmul.allow_tf32 = True
-    torch.backends.cudnn.allow_tf32 = True
-
+if torch.cuda.is_available():
+    torch.autocast(device_type="cuda", dtype=torch.bfloat16).__enter__()
+    if torch.cuda.get_device_properties(0).major >= 8:
+        torch.backends.cuda.matmul.allow_tf32 = True
+        torch.backends.cudnn.allow_tf32 = True
+elif torch.backends.mps.is_available():
+    DEVICE = torch.device("mps")
+else:
+    DEVICE = torch.device("cpu")
 
 FLORENCE_MODEL, FLORENCE_PROCESSOR = None, None
 SAM_IMAGE_MODEL = None
