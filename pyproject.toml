@@ -1,0 +1,16 @@
+[project]
+name = "florence2sam2"
+description = "ComfyUI custom node implementing Florence 2 + Segment Anything Model 2, based on [a/SkalskiP's HuggingFace space](https://huggingface.co/spaces/SkalskiP/florence-sam)"
+version = "1.0.0"
+license = {file = "LICENSE"}
+dependencies = ["tqdm", "einops", "spaces", "timm", "transformers", "gradio", "supervision", "opencv-python", "pytest", "# Build dependency; getting errors so try putting it here", "flit_core>=3.2,<4", "#samv2", "# Rdancer's version of samv2 includes a fix that makes it not crash on Windows", "git+https://github.com/rdancer/samv2.git"]
+
+[project.urls]
+Repository = "https://github.com/rdancer/ComfyUI_Florence2SAM2"
+#  Used by Comfy Registry https://registry.comfy.org
+
+[tool.comfy]
+PublisherId = ""
+DisplayName = "ComfyUI_Florence2SAM2"
+Icon = ""
+includes = []
